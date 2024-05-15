@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mflix</title>
+</head>
+<body>
+  <h1>Welcome to MFLIX</h1>
+  <input type="number" id="movieCount" placeholder="Enter number of movies">
+  <script>
+    function getMovies(limit) {
+      fetch('http://localhost:3000/movies?limit='+limit)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          const existingList = document.querySelector('ul');
+          if (existingList) {
+            existingList.remove();
+          }
+          const movieList = document.createElement('ul');
+          data.forEach(movie => {
+            const listItem = document.createElement('li');
+            listItem.textContent = movie.title;
+            movieList.appendChild(listItem);
+          });
+          document.body.appendChild(movieList);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const button = document.createElement('button');
+      button.textContent = 'Get Movies';
+      button.addEventListener('click', () => {
+        const movieLimit = document.getElementById('movieCount').value;
+        getMovies(movieLimit);
+      });
+      document.body.appendChild(button);
+    });
+  </script>
+</body>
+</html>
